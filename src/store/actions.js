@@ -677,6 +677,13 @@ export default {
 			})
 		}
 	},
+	replaceDraft({getters, commit}, {draft, uid, data}) {
+		commit('updateDraft', {
+			draft,
+			data,
+			newUid: uid,
+		})
+	},
 	deleteMessage({getters, commit}, {accountId, folderId, uid}) {
 		commit('removeEnvelope', {accountId, folderId, uid})
 
