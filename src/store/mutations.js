@@ -192,8 +192,7 @@ export default {
 		Vue.set(state.messages, uuid, message)
 	},
 	addMessageThread(state, {message, thread}) {
-		Vue.set(message, 'thread', thread )
-
+		Vue.set(message, 'thread', thread)
 	},
 	updateDraft(state, {draft, data, newUid}) {
 		// Update draft's UID

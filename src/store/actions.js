@@ -653,29 +653,23 @@ export default {
 		})
 	},
 	async fetchMessage({commit}, uuid) {
-		const { accountId, folderId, uid } = parseUuid(uuid)
-		const message = await fetchMessage(accountId, folderId, id)
-		fetchMessage({ commit }, uuid)
+		const {accountId, folderId, uid} = parseUuid(uuid)
+		const message = await fetchMessage(accountId, folderId, uid)
 		{
-			const { accountId, folderId, uid } = parseUuid(uuid)
-			return fetchMessage(accountId, folderId, uid).then((message) => {
-				// Only commit if not undefined (not found)
-				if (message) {
-					commit('addMessage', {
-						accountId,
-						folderId,
-						message,
-					})
-				}
-				const thread = await fetchThread(accountId, id)
-				commit('addMessageThread', {
+			if (message) {
+				commit('addMessage', {
+					accountId,
+					folderId,
 					message,
-					thread,
 				})
-
-				return message
+			}
+			const thread = await fetchThread(accountId, uid)
+			commit('addMessageThread', {
+				message,
+				thread,
 			})
 		}
+		return message
 	},
 	replaceDraft({getters, commit}, {draft, uid, data}) {
 		commit('updateDraft', {
