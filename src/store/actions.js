@@ -58,6 +58,7 @@ import {
 	fetchMessage,
 	setEnvelopeFlag,
 	syncEnvelopes,
+	fetchThread,
 } from '../service/MessageService'
 import {createAlias, deleteAlias} from '../service/AliasService'
 import logger from '../logger'
@@ -651,27 +652,30 @@ export default {
 			})
 		})
 	},
-	fetchMessage({commit}, uuid) {
-		const {accountId, folderId, uid} = parseUuid(uuid)
-		return fetchMessage(accountId, folderId, uid).then((message) => {
-			// Only commit if not undefined (not found)
-			if (message) {
-				commit('addMessage', {
-					accountId,
-					folderId,
+	async fetchMessage({commit}, uuid) {
+		const { accountId, folderId, uid } = parseUuid(uuid)
+		const message = await fetchMessage(accountId, folderId, id)
+		fetchMessage({ commit }, uuid)
+		{
+			const { accountId, folderId, uid } = parseUuid(uuid)
+			return fetchMessage(accountId, folderId, uid).then((message) => {
+				// Only commit if not undefined (not found)
+				if (message) {
+					commit('addMessage', {
+						accountId,
+						folderId,
+						message,
+					})
+				}
+				const thread = await fetchThread(accountId, id)
+				commit('addMessageThread', {
 					message,
+					thread,
 				})
-			}
 
-			return message
-		})
-	},
-	replaceDraft({getters, commit}, {draft, uid, data}) {
-		commit('updateDraft', {
-			draft,
-			data,
-			newUid: uid,
-		})
+				return message
+			})
+		}
 	},
 	deleteMessage({getters, commit}, {accountId, folderId, uid}) {
 		commit('removeEnvelope', {accountId, folderId, uid})

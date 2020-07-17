@@ -21,6 +21,10 @@
 						</template>
 					</p>
 				</div>
+				<Actions default-icon="icon-mail" menu-title="Thread">
+					<ActionButton v-for="message in thread" :key="message.id" icon="icon-mail" @click="expand">
+						{{message.subject}}</ActionButton>
+				</Actions>
 				<div id="mail-message-actions">
 					<div
 						:class="
@@ -168,6 +172,10 @@ export default {
 		hasMultipleRecipients() {
 			return this.replyRecipient.to.concat(this.replyRecipient.cc).length > 1
 		},
+		thread() {
+			this.$store.getters.getMessageThread( this.message.accountId,
+				this.message.folderId,  this.message.uid)
+		}
 	},
 	watch: {
 		$route(to, from) {

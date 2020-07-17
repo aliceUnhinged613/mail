@@ -58,6 +58,14 @@ export function fetchEnvelopes(accountId, folderId, query, cursor, limit) {
 			throw convertAxiosError(error)
 		})
 }
+export const fetchThread = async (accountId, id) => {
+	const url = generateUrl('apps/mail/api/accounts/{accountId}/message/{id}/thread', {
+		accountId,
+		id,
+	})
+	const resp = await axios.get(url)
+	return resp.data
+}
 
 export async function syncEnvelopes(accountId, folderId, uids, query, init = false) {
 	const url = generateUrl('/apps/mail/api/accounts/{accountId}/folders/{folderId}/sync', {

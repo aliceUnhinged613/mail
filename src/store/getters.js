@@ -65,4 +65,11 @@ export const getters = {
 	getMessage: (state) => (accountId, folderId, uid) => {
 		return state.messages[normalizedMessageId(accountId, folderId, uid)]
 	},
+	getMessageThread: (state) => (accountId, folderId, uid) => {
+			const message = state.messages[normalizedMessageId(accountId, folderId, uid)]
+		if(message === undefined) {
+			return []
+		}
+		return message.thread
+	},
 }

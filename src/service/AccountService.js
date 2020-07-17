@@ -73,7 +73,6 @@ export const fetch = (id) => {
 
 	return axios.get(url).then((resp) => fixAccountId(resp.data))
 }
-
 export const fetchQuota = async (id) => {
 	const url = generateUrl('/apps/mail/api/accounts/{id}/quota', {
 		id,
