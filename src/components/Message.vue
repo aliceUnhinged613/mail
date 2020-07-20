@@ -21,10 +21,15 @@
 						</template>
 					</p>
 				</div>
-				<Actions default-icon="icon-mail" menu-title="Thread">
-					<ActionButton v-for="message in thread" :key="message.id" icon="icon-mail" @click="expand">
-						{{ message.subject }}</ActionButton
-					>
+				<Actions default-icon="icon-mail" style="display: block">
+					<ActionButton
+						v-for="threadMessage in thread"
+						:key="threadMessage.id"
+						icon="icon-mail">
+						{{
+						threadMessage.subject
+						}}
+					</ActionButton>
 				</Actions>
 				<div id="mail-message-actions">
 					<div
