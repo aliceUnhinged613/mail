@@ -21,15 +21,15 @@
 						</template>
 					</p>
 				</div>
-				<Actions default-icon="icon-mail" style="display: block">
-					<ActionButton
+				<Actions default-icon="icon-mail" style="display: block;">
+					<ActionRouter
 						v-for="threadMessage in thread"
 						:key="threadMessage.id"
-						icon="icon-mail">
-						{{
-						threadMessage.subject
-						}}
-					</ActionButton>
+						:to="threadRoute"
+						icon="icon-mail"
+					>
+						({{ threadMessage.from[0].label }}) {{ threadMessage.subject }}
+					</ActionRouter>
 				</Actions>
 				<div id="mail-message-actions">
 					<div
@@ -103,6 +103,7 @@
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
+import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import Popover from '@nextcloud/vue/dist/Components/Popover'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import axios from '@nextcloud/axios'
@@ -139,6 +140,7 @@ export default {
 		MessagePlainTextBody,
 		Modal,
 		Popover,
+		ActionRouter,
 	},
 	data() {
 		return {
@@ -152,11 +154,23 @@ export default {
 			rawMessage: '',
 			sourceLoading: false,
 			showSource: false,
+			threadMessage: undefined,
 		}
 	},
 	computed: {
+		threadRoute() {
+			return {
+				name: 'message',
+				params: {
+					accountId: this.message.accountId,
+					folderId: this.message.folderId,
+					//fixme
+					uid: this.message.uid,
+				},
+			}
+		},
 		from() {
-			return this.message.from[0]?.email
+			return this.message.from.length === 0 ? '?' : this.message.from[0].label || this.message.from[0].email
 		},
 		isEncrypted() {
 			return isPgpgMessage(this.message.hasHtmlBody ? html(this.message.body) : plain(this.message.body))
