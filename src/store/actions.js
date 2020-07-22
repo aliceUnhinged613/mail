@@ -663,7 +663,7 @@ export default {
 					message,
 				})
 			}
-			const thread = await fetchThread(accountId, uid)
+			const thread = await fetchThread(accountId, message.id)
 			commit('addMessageThread', {
 				message,
 				thread,

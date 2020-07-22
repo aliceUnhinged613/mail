@@ -222,6 +222,15 @@ class MessagesController extends Controller {
 			base64_decode($folderId),
 			$messageId
 		);
+
+		// FIXME: This is probably not a sane way to map the IMAP message to the database
+		$databaseMessage = $this->mailSearch->findMessage(
+			$account,
+			base64_decode($folderId),
+			$messageId
+		);
+		$json['id'] = $databaseMessage->getId();
+
 		$json['itineraries'] = $this->itineraryService->extract(
 			$account,
 			base64_decode($folderId),
