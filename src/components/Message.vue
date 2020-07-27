@@ -21,16 +21,6 @@
 						</template>
 					</p>
 				</div>
-				<Actions default-icon="icon-mail" style="display: block;">
-					<ActionRouter
-						v-for="threadMessage in thread"
-						:key="threadMessage.id"
-						:to="threadRoute"
-						icon="icon-mail"
-					>
-						({{ threadMessage.from[0].label }}) {{ threadMessage.subject }}
-					</ActionRouter>
-				</Actions>
 				<div id="mail-message-actions">
 					<div
 						:class="
@@ -81,6 +71,11 @@
 					</Modal>
 				</div>
 			</div>
+			<router-link v-for="threadMessage in thread" :key="threadMessage.id" :to="threadRoute" class="icon-mail">
+				<div class="address">{{ threadMessage.from[0].label }}</div>
+				<!-- TODO: instead of subject it should be shown the first line of the message #2666 -->
+				{{ threadMessage.subject }}
+			</router-link>
 			<div :class="[message.hasHtmlBody ? 'mail-message-body mail-message-body-html' : 'mail-message-body']">
 				<div v-if="message.itineraries.length > 0" class="message-itinerary">
 					<Itinerary :entries="message.itineraries" :message-id="message.messageId" />
@@ -103,7 +98,6 @@
 <script>
 import Actions from '@nextcloud/vue/dist/Components/Actions'
 import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
-import ActionRouter from '@nextcloud/vue/dist/Components/ActionRouter'
 import Popover from '@nextcloud/vue/dist/Components/Popover'
 import AppContentDetails from '@nextcloud/vue/dist/Components/AppContentDetails'
 import axios from '@nextcloud/axios'
@@ -140,7 +134,6 @@ export default {
 		MessagePlainTextBody,
 		Modal,
 		Popover,
-		ActionRouter,
 	},
 	data() {
 		return {
@@ -358,7 +351,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #mail-message {
 	flex-grow: 1;
 }
@@ -367,6 +360,25 @@ export default {
 	flex: 1;
 	margin-bottom: 10px;
 	position: relative;
+}
+a {
+	display: block;
+	border-bottom: 1px solid var(--color-primary-light);
+	padding-left: 30px;
+	margin-bottom: 15px;
+	horiz-align: center;
+	opacity: 0.7;
+
+	&:hover {
+		opacity: 1;
+	}
+}
+.address {
+	font-weight: bold;
+}
+.icon-mail {
+	background-image: var(--icon-mail-000);
+	background-position: 0 center;
 }
 
 #mail-message-header {
